@@ -31,26 +31,74 @@ const questions = [
 ];
 
 // Display the quiz questions and choices
+const questionsDiv = document.getElementById("questions");
+const submitButton = document.getElementById("submit");
+const scoreDiv = document.getElementById("score");
+
+
+let userAnswers = JSON.parse(sessionStorage.getItem("progress")) || [];
+
 function renderQuestions() {
-  for (let i = 0; i < questions.length; i++) {
-    const question = questions[i];
+  questionsDiv.innerHTML = ""; 
+
+  questions.forEach((questionObj, index) => {
     const questionElement = document.createElement("div");
-    const questionText = document.createTextNode(question.question);
+    const questionText = document.createElement("p");
+    questionText.textContent = `${index + 1}. ${questionObj.question}`;
     questionElement.appendChild(questionText);
-    for (let j = 0; j < question.choices.length; j++) {
-      const choice = question.choices[j];
-      const choiceElement = document.createElement("input");
-      choiceElement.setAttribute("type", "radio");
-      choiceElement.setAttribute("name", `question-${i}`);
-      choiceElement.setAttribute("value", choice);
-      if (userAnswers[i] === choice) {
-        choiceElement.setAttribute("checked", true);
+
+    questionObj.choices.forEach((choice) => {
+      const choiceLabel = document.createElement("label");
+      const choiceInput = document.createElement("input");
+      choiceInput.setAttribute("type", "radio");
+      choiceInput.setAttribute("name", `question-${index}`);
+      choiceInput.setAttribute("value", choice);
+
+       if (userAnswers[index] === choice) {
+        choiceInput.checked = true;
       }
-      const choiceText = document.createTextNode(choice);
-      questionElement.appendChild(choiceElement);
-      questionElement.appendChild(choiceText);
+
+      choiceInput.addEventListener("change", () => {
+        userAnswers[index] = choice;
+        sessionStorage.setItem("progress", JSON.stringify(userAnswers));
+      });
+
+      choiceLabel.appendChild(choiceInput);
+      choiceLabel.appendChild(document.createTextNode(choice));
+      questionElement.appendChild(choiceLabel);
+      questionElement.appendChild(document.createElement("br"));
+    });
+
+    questionsDiv.appendChild(questionElement);
+  });
+}
+
+function calculateScore() {
+  let score = 0;
+
+  questions.forEach((questionObj, index) => {
+    if (userAnswers[index] === questionObj.answer) {
+      score++;
     }
-    questionsElement.appendChild(questionElement);
+  });
+
+  localStorage.setItem("score", score);
+  scoreDiv.textContent = `Your score is ${score} out of ${questions.length}`;
+}
+
+
+function restoreScore() {
+  const savedScore = localStorage.getItem("score");
+  if (savedScore !== null) {
+    scoreDiv.textContent = `Your previous score was ${savedScore} out of ${questions.length}`;
   }
 }
-renderQuestions();
+
+
+submitButton.addEventListener("click", calculateScore);
+
+
+window.onload = function () {
+  renderQuestions();
+  restoreScore();
+};
