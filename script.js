@@ -57,6 +57,7 @@ function renderQuestions() {
         choiceInput.checked = true; // Set radio button as checked
       }
 
+      // Add event listener to save progress when an option is selected
       choiceInput.addEventListener("change", () => {
         userAnswers[index] = choice; // Save the user's answer
         sessionStorage.setItem("progress", JSON.stringify(userAnswers)); // Save progress in session storage
@@ -82,13 +83,13 @@ function calculateScore() {
     }
   });
 
-  localStorage.setItem("score", score); // Save score in local storage
+  sessionStorage.setItem("score", score); // Save score in session storage
   scoreDiv.textContent = `Your score is ${score} out of ${questions.length}`; // Display score
 }
 
 // Function to restore previous score
 function restoreScore() {
-  const savedScore = localStorage.getItem("score");
+  const savedScore = sessionStorage.getItem("score");
   if (savedScore !== null) {
     scoreDiv.textContent = `Your previous score was ${savedScore} out of ${questions.length}`;
   }
