@@ -44,30 +44,33 @@ function renderQuestions() {
   questions.forEach((questionObj, index) => {
     const questionElement = document.createElement("div");
     const questionText = document.createElement("p");
-    questionText.textContent = `${index + 1}. ${questionObj.question}`;
+   questionText.textContent = `${questionObj.question}`
     questionElement.appendChild(questionText);
 
-    questionObj.choices.forEach((choice) => {
-      const choiceLabel = document.createElement("label");
-      const choiceInput = document.createElement("input");
-      choiceInput.setAttribute("type", "radio");
-      choiceInput.setAttribute("name", `question-${index}`);
-      choiceInput.setAttribute("value", choice);
+   questionObj.choices.forEach((choice) => {
+  const choiceLabel = document.createElement("label");
+  const choiceInput = document.createElement("input");
 
-       if (userAnswers[index] === choice) {
-        choiceInput.checked = true;
-      }
+  choiceInput.setAttribute("type", "radio");
+  choiceInput.setAttribute("name", `question-${index}`);
+  choiceInput.setAttribute("value", choice);
 
-      choiceInput.addEventListener("change", () => {
-        userAnswers[index] = choice;
-        sessionStorage.setItem("progress", JSON.stringify(userAnswers));
-      });
+  if (userAnswers[index] === choice) {
+    choiceInput.checked = true;
+  }
 
-      choiceLabel.appendChild(choiceInput);
-      choiceLabel.appendChild(document.createTextNode(choice));
-      questionElement.appendChild(choiceLabel);
-      questionElement.appendChild(document.createElement("br"));
-    });
+ 
+  choiceInput.addEventListener("change", () => {
+    userAnswers[index] = choice;
+    sessionStorage.setItem("progress", JSON.stringify(userAnswers));
+  });
+
+  choiceLabel.appendChild(choiceInput);
+  choiceLabel.appendChild(document.createTextNode(choice));
+  questionElement.appendChild(choiceLabel);
+  questionElement.appendChild(document.createElement("br"));
+});
+
 
     questionsDiv.appendChild(questionElement);
   });
