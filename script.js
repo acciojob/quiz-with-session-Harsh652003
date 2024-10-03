@@ -34,14 +34,14 @@ const scoreDiv = document.getElementById("score");
 
 let userAnswers = JSON.parse(sessionStorage.getItem("progress")) || [];
 
-
+// Function to render questions and choices
 function renderQuestions() {
   questionsDiv.innerHTML = ""; 
-	
+
   questions.forEach((questionObj, index) => {
     const questionElement = document.createElement("div");
     const questionText = document.createElement("p");
-     questionText.textContent = questionObj.question;
+    questionText.textContent = questionObj.question; // Display question without number
     questionElement.appendChild(questionText);
 
     questionObj.choices.forEach((choice) => {
@@ -52,10 +52,9 @@ function renderQuestions() {
       choiceInput.setAttribute("name", `question-${index}`);
       choiceInput.setAttribute("value", choice);
 
-        console.log(`Restoring answer for question ${index}:`, userAnswers[index]);
-
-       if (userAnswers[index] === choice) {
-        choiceInput.checked = true;
+      // Restore checked state
+      if (userAnswers[index] === choice) {
+        choiceInput.checked = true; // Set radio button as checked
       }
 
       choiceInput.addEventListener("change", () => {
@@ -73,6 +72,7 @@ function renderQuestions() {
   });
 }
 
+// Function to calculate the score
 function calculateScore() {
   let score = 0;
 
@@ -86,6 +86,7 @@ function calculateScore() {
   scoreDiv.textContent = `Your score is ${score} out of ${questions.length}`; // Display score
 }
 
+// Function to restore previous score
 function restoreScore() {
   const savedScore = localStorage.getItem("score");
   if (savedScore !== null) {
@@ -93,11 +94,13 @@ function restoreScore() {
   }
 }
 
+// Event listener for the submit button
 submitButton.addEventListener("click", calculateScore);
 
+// On window load, render questions and restore the score
 window.onload = function () {
   setTimeout(() => {
-    renderQuestions();
-    restoreScore(); 
+    renderQuestions(); // Render questions
+    restoreScore(); // Restore previous score
   }, 100);
 };
