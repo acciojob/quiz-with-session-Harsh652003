@@ -35,7 +35,6 @@ const questionsDiv = document.getElementById("questions");
 const submitButton = document.getElementById("submit");
 const scoreDiv = document.getElementById("score");
 
-
 let userAnswers = JSON.parse(sessionStorage.getItem("progress")) || [];
 
 function renderQuestions() {
@@ -55,6 +54,8 @@ function renderQuestions() {
   choiceInput.setAttribute("name", `question-${index}`);
   choiceInput.setAttribute("value", choice);
 
+	    console.log(`Restoring answer for question ${index}:`, userAnswers[index]);
+	   
   if (userAnswers[index] === choice) {
     choiceInput.checked = true;
   }
@@ -76,6 +77,45 @@ function renderQuestions() {
   });
 }
 
+function renderQuestions() {
+  questionsDiv.innerHTML = ""; 
+
+  questions.forEach((questionObj, index) => {
+    const questionElement = document.createElement("div");
+    const questionText = document.createElement("p");
+    questionText.textContent = `${questionObj.question}`;
+    questionElement.appendChild(questionText);
+
+    questionObj.choices.forEach((choice) => {
+      const choiceLabel = document.createElement("label");
+      const choiceInput = document.createElement("input");
+
+      choiceInput.setAttribute("type", "radio");
+      choiceInput.setAttribute("name", `question-${index}`);
+      choiceInput.setAttribute("value", choice);
+
+      // Debugging: Log userAnswers
+      console.log(`Restoring answer for question ${index}:`, userAnswers[index]);
+
+      if (userAnswers[index] === choice) {
+        choiceInput.checked = true; // Restore checked state
+      }
+
+      choiceInput.addEventListener("change", () => {
+        userAnswers[index] = choice;
+        sessionStorage.setItem("progress", JSON.stringify(userAnswers)); // Save progress
+      });
+
+      choiceLabel.appendChild(choiceInput);
+      choiceLabel.appendChild(document.createTextNode(choice));
+      questionElement.appendChild(choiceLabel);
+      questionElement.appendChild(document.createElement("br"));
+    });
+
+    questionsDiv.appendChild(questionElement);
+  });
+}
+
 function calculateScore() {
   let score = 0;
 
@@ -89,7 +129,6 @@ function calculateScore() {
   scoreDiv.textContent = `Your score is ${score} out of ${questions.length}`;
 }
 
-
 function restoreScore() {
   const savedScore = localStorage.getItem("score");
   if (savedScore !== null) {
@@ -97,10 +136,7 @@ function restoreScore() {
   }
 }
 
-
 submitButton.addEventListener("click", calculateScore);
-
-
 window.onload = function () {
   renderQuestions();
   restoreScore();
