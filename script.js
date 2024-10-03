@@ -137,7 +137,11 @@ function restoreScore() {
 }
 
 submitButton.addEventListener("click", calculateScore);
+
 window.onload = function () {
-  renderQuestions();
-  restoreScore();
+  setTimeout(() => {
+    renderQuestions();
+    restoreScore();
+  }, 100); 
 };
+
