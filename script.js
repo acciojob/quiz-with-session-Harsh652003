@@ -1,7 +1,4 @@
-//your JS code here.
-
 // Do not change code below this line
-// This code will just display the questions to the screen
 const questions = [
   {
     question: "What is the capital of France?",
@@ -37,53 +34,14 @@ const scoreDiv = document.getElementById("score");
 
 let userAnswers = JSON.parse(sessionStorage.getItem("progress")) || [];
 
+// Render the quiz questions and choices
 function renderQuestions() {
-  questionsDiv.innerHTML = ""; 
+  questionsDiv.innerHTML = ""; // Clear previous questions
 
   questions.forEach((questionObj, index) => {
     const questionElement = document.createElement("div");
     const questionText = document.createElement("p");
-   questionText.textContent = `${questionObj.question}`
-    questionElement.appendChild(questionText);
-
-   questionObj.choices.forEach((choice) => {
-  const choiceLabel = document.createElement("label");
-  const choiceInput = document.createElement("input");
-
-  choiceInput.setAttribute("type", "radio");
-  choiceInput.setAttribute("name", `question-${index}`);
-  choiceInput.setAttribute("value", choice);
-
-	    console.log(`Restoring answer for question ${index}:`, userAnswers[index]);
-	   
-  if (userAnswers[index] === choice) {
-    choiceInput.checked = true;
-  }
-
- 
-  choiceInput.addEventListener("change", () => {
-    userAnswers[index] = choice;
-    sessionStorage.setItem("progress", JSON.stringify(userAnswers));
-  });
-
-  choiceLabel.appendChild(choiceInput);
-  choiceLabel.appendChild(document.createTextNode(choice));
-  questionElement.appendChild(choiceLabel);
-  questionElement.appendChild(document.createElement("br"));
-});
-
-
-    questionsDiv.appendChild(questionElement);
-  });
-}
-
-function renderQuestions() {
-  questionsDiv.innerHTML = ""; 
-
-  questions.forEach((questionObj, index) => {
-    const questionElement = document.createElement("div");
-    const questionText = document.createElement("p");
-    questionText.textContent = `${questionObj.question}`;
+    questionText.textContent = `${index + 1}. ${questionObj.question}`; // Show question number
     questionElement.appendChild(questionText);
 
     questionObj.choices.forEach((choice) => {
@@ -94,16 +52,15 @@ function renderQuestions() {
       choiceInput.setAttribute("name", `question-${index}`);
       choiceInput.setAttribute("value", choice);
 
-      // Debugging: Log userAnswers
-      console.log(`Restoring answer for question ${index}:`, userAnswers[index]);
+        console.log(`Restoring answer for question ${index}:`, userAnswers[index]);
 
-      if (userAnswers[index] === choice) {
-        choiceInput.checked = true; // Restore checked state
+       if (userAnswers[index] === choice) {
+        choiceInput.checked = true;
       }
 
       choiceInput.addEventListener("change", () => {
-        userAnswers[index] = choice;
-        sessionStorage.setItem("progress", JSON.stringify(userAnswers)); // Save progress
+        userAnswers[index] = choice; // Save the user's answer
+        sessionStorage.setItem("progress", JSON.stringify(userAnswers)); // Save progress in session storage
       });
 
       choiceLabel.appendChild(choiceInput);
@@ -112,7 +69,7 @@ function renderQuestions() {
       questionElement.appendChild(document.createElement("br"));
     });
 
-    questionsDiv.appendChild(questionElement);
+    questionsDiv.appendChild(questionElement); // Add the question element to the questionsDiv
   });
 }
 
@@ -125,8 +82,8 @@ function calculateScore() {
     }
   });
 
-  localStorage.setItem("score", score);
-  scoreDiv.textContent = `Your score is ${score} out of ${questions.length}`;
+  localStorage.setItem("score", score); // Save score in local storage
+  scoreDiv.textContent = `Your score is ${score} out of ${questions.length}`; // Display score
 }
 
 function restoreScore() {
@@ -141,7 +98,6 @@ submitButton.addEventListener("click", calculateScore);
 window.onload = function () {
   setTimeout(() => {
     renderQuestions();
-    restoreScore();
-  }, 100); 
+    restoreScore(); 
+  }, 100);
 };
-
