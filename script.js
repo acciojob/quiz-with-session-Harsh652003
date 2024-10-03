@@ -34,14 +34,14 @@ const scoreDiv = document.getElementById("score");
 
 let userAnswers = JSON.parse(sessionStorage.getItem("progress")) || [];
 
-// Render the quiz questions and choices
-function renderQuestions() {
-  questionsDiv.innerHTML = ""; // Clear previous questions
 
+function renderQuestions() {
+  questionsDiv.innerHTML = ""; 
+	
   questions.forEach((questionObj, index) => {
     const questionElement = document.createElement("div");
     const questionText = document.createElement("p");
-    questionText.textContent = `${index + 1}. ${questionObj.question}`; // Show question number
+     questionText.textContent = questionObj.question;
     questionElement.appendChild(questionText);
 
     questionObj.choices.forEach((choice) => {
